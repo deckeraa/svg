@@ -15,6 +15,24 @@
                       :width  "100"
                       :style "stroke:#ff0000; fill: #0000ff"}]])
 
+(defn gen-rect []
+  [:rect {:x (rand 100)
+          :y (rand 100)
+          :height (rand 100)
+          :width  (rand 100)
+          :style "stroke:#ff0000; fill: #0000ff"}])
+
+(defn gen-rects [num-rects]
+  (take num-rects (repeatedly gen-rect)))
+
+(defn gen-rects-svg [num-rects]
+  (html/html (vec (concat 
+                   [:svg {:width  "100%" 
+                          :height "100%"
+                          :version "1.1"
+                          :xmlns "http://www.w3.org/2000/svg"}]
+                   (gen-rects num-rects)))))
+
 ;; (defn make-svg []
 ;;   (emit-str (sexps-as-fragment svg-data)))
 
@@ -25,7 +43,7 @@
   []
   [:title] (html/content "SVG playground")
   [:body]  (html/content "You should see an svg below.")
-  [:body]  (html/append (make-svg)))
+  [:body]  (html/append (gen-rects-svg 6)))
 
 
 (defroutes app-routes
