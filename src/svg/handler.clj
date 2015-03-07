@@ -5,7 +5,7 @@
             [net.cgrand.enlive-html :as html]))
 (use 'clojure.data.xml)
 
-(html/deftemplate svg-temp "svg.html"
+(html/deftemplate svg-template "svg/svg.html"
   [])
 
 (defn make-svg []
