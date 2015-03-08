@@ -4,6 +4,8 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [net.cgrand.enlive-html :as html]))
 
+;;; Abstract File Reader
+
 ;;; SVG Generation code
 
 (def hex-digit-seq ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f"])
