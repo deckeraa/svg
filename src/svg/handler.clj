@@ -4,7 +4,15 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [net.cgrand.enlive-html :as html]))
 
-;;; Abstract File Reader
+;;; FHX2 File Reader
+(import 'org.fhaes.fhfilereader.FHX2FileReader)
+
+(def ^:dynamic reader (new org.fhaes.fhfilereader.FHX2FileReader 
+                           (clojure.java.io/file "resources/public/uscbe001.fhx")))
+(.getFileFormat reader)
+(.getLastYear reader)
+(.getNumberOfSeries reader)
+(.getName reader)
 
 ;;; SVG Generation code
 
