@@ -13,7 +13,13 @@
 (.getLastYear reader)
 (.getNumberOfSeries reader)
 (.getName reader)
+(.getSeriesList reader)
 
+;;; SVG Generation code for FHChart
+(defn fhseries->enlive [series]
+  [:line {:x1 0 :y1 0 :x2 50 :y2 50 :stroke-width 25}])
+
+(fhseries->enlive (take 1 (.getSeriesList reader)))
 ;;; SVG Generation code
 
 (def hex-digit-seq ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f"])
@@ -37,7 +43,9 @@
                           :height "100%"
                           :version "1.1"
                           :xmlns "http://www.w3.org/2000/svg"}]
-                   (gen-rects num-rects)))))
+                   [[:g {:stroke "green"} (fhseries->enlive nil)]]
+                   ;(gen-rects num-rects)
+                   ))))
 
 (html/deftemplate svg-template "svg/svg.html"
   []
