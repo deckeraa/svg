@@ -9,6 +9,7 @@
 
 (def ^:dynamic reader (new org.fhaes.fhfilereader.FHX2FileReader 
                            (clojure.java.io/file "resources/public/uscbe001.fhx")))
+(def ^:dynamic series (first (.getSeriesList reader)))
 (.getFileFormat reader)
 (.getLastYear reader)
 (.getNumberOfSeries reader)
@@ -17,9 +18,19 @@
 
 ;;; SVG Generation code for FHChart
 (defn fhseries->enlive [series]
-  [:line {:x1 0 :y1 0 :x2 50 :y2 50 :stroke-width 25}])
+  [:line {:x1 (.getFirstYear series) 
+          :y1 50 
+          :x2 (.getLastYear  series)
+          :y2 50 
+          :stroke-width 25}])
 
-(fhseries->enlive (take 1 (.getSeriesList reader)))
+(defn gen-series-lines [reader]
+  [:g {:transform "translate(-1563,0)"
+       :stroke "green"}
+   (fhseries->enlive series)])
+
+(fhseries->enlive series)
+(gen-series-lines reader)
 ;;; SVG Generation code
 
 (def hex-digit-seq ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f"])
@@ -43,7 +54,17 @@
                           :height "100%"
                           :version "1.1"
                           :xmlns "http://www.w3.org/2000/svg"}]
-                   [[:g {:stroke "green"} (fhseries->enlive nil)]]
+;                   [[:g {:stroke "green"} (fhseries->enlive nil)]]
+                   (gen-rects num-rects)
+                   ))))
+
+(defn gen-fire-chart [fhfilereader]
+  (html/html (vec (concat 
+                   [:svg {:width  "100%" 
+                          :height "100%"
+                          :version "1.1"
+                          :xmlns "http://www.w3.org/2000/svg"}]
+                   [(gen-series-lines reader)]
                    ;(gen-rects num-rects)
                    ))))
 
@@ -51,7 +72,8 @@
   []
   [:title] (html/content "SVG playground")
   [:body]  (html/content "You should see an svg below.")
-  [:body]  (html/append (gen-rects-svg 6)))
+  [:body]  (html/append (gen-rects-svg 6))
+  [:body]  (html/append (gen-fire-chart reader)))
 
 
 ;;; Compojure code
